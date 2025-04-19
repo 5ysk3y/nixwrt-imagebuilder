@@ -73,8 +73,8 @@ This repository is not a competitor — rather, it is a personal exploration of 
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/YOUR_USER/nix-wrt3200acm-imagebuilder
-   cd nix-wrt3200acm-imagebuilder
+   git clone https://github.com/5ysk3y/nixwrt-imagebuilder
+   cd nixwrt-imagebuilder
    ```
    
 2. Configure your variables in `config.nix` (all of these can be overriden by passing as environment variables too):

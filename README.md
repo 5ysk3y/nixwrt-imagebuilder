@@ -1,6 +1,6 @@
 # 🔧 nixwrt-imagebuilder
 
-A lightweight, Nix-based utility for building customized OpenWRT images — specifically tuned for the Linksys WRT3200ACM (but adaptable to other targets with minor tweaks).
+A lightweight, Nix-based utility for building customized OpenWRT images — specifically tuned for the GL.iNet Flint 2 (but adaptable to other targets with minor tweaks).
 
 ---
 

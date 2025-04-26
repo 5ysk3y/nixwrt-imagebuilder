@@ -17,7 +17,9 @@ done
 
 ROUTER_HOST="${ROUTER_HOST:-$ROUTER_HOST}"
 TARGET="${TARGET:-$TARGET}"
+TARGET_ARCH="${TARGET//\//-}"
 PROFILE="${PROFILE:-$PROFILE}"
+FILES="${FILES:-$FILES}"
 CUSTOM_PACKAGES_FILE="${CUSTOM_PACKAGES_FILE:-$CUSTOM_PACKAGES_FILE}"
 EXCLUDE_PACKAGES_FILE="${EXCLUDE_PACKAGES_FILE:-$EXCLUDE_PACKAGES_FILE}"
 FORCE_BUILD="${FORCE_BUILD:-0}"
@@ -43,13 +45,12 @@ get_installed_version() {
 download_imagebuilder() {
   local version="$1"
   echo "Version: $version"
-  local target_arch="${TARGET//\//-}"
-  echo "Target Arch: $target_arch"
+  echo "Target Arch: $TARGET_ARCH"
 
   echo "🔽 Downloading ImageBuilder for OpenWrt $version..."
 
   local listing_url="${BASE_URL}/${version}/targets/${TARGET}/"
-  archive_name=$(curl -s "$listing_url" | grep -oE "openwrt-imagebuilder-${version}-${target_arch}[^\"']+\.tar\.zst" | head -n1)
+  archive_name=$(curl -s "$listing_url" | grep -oE "openwrt-imagebuilder-${version}-${TARGET_ARCH}[^\"']+\.tar\.zst" | head -n1)
 
   if [[ -z "$archive_name" ]]; then
     echo "❌ Could not find ImageBuilder for version $version at $listing_url"
@@ -78,6 +79,7 @@ build_image() {
   echo "  ROUTER_HOST = $ROUTER_HOST"
   echo "  TARGET = $TARGET"
   echo "  PROFILE = $PROFILE"
+  echo "  FILES = $FILES"
   echo "  CUSTOM_PACKAGES_FILE = $CUSTOM_PACKAGES_FILE"
   echo "  EXCLUDE_PACKAGES_FILE = $EXCLUDE_PACKAGES_FILE"
 
@@ -88,10 +90,10 @@ build_image() {
 
   pushd "$builder_dir" > /dev/null
 
-  make image PROFILE="$PROFILE" PACKAGES="$custom_packages $exclude_packages"
+  make image PROFILE="$PROFILE" PACKAGES="$custom_packages $exclude_packages" FILES="$FILES"
 
   popd > /dev/null
-  OUTFILE=$(find imagebuilder/openwrt-imagebuilder-"$version"-mvebu-cortexa9.Linux-x86_64/bin/targets/"$TARGET" -name *sysupgrade*  2>/dev/null | head -n1 )
+  OUTFILE=$(find imagebuilder/openwrt-imagebuilder-"$version"-"$TARGET_ARCH".Linux-x86_64/bin/targets/"$TARGET" -name *sysupgrade*  2>/dev/null | head -n1 )
   cp "$OUTFILE" ~/Downloads
 
   echo "✅ Build complete. Check your downloads folder!"
@@ -100,17 +102,20 @@ build_image() {
 main() {
   echo "🔍 Checking latest available version from OpenWRT..."
   latest_version=$(fetch_latest_version)
-  echo "🔍 Checking installed version on ${ROUTER_HOST}..."
-  installed_version=$(get_installed_version)
 
-  echo "🆕 Latest version:    ${latest_version}"
-  echo "📦 Installed version: ${installed_version}"
+  if [[ "$FORCE_BUILD" = "0" ]]; then
+    echo "🔍 Checking installed version on ${ROUTER_HOST}..."
+    installed_version=$(get_installed_version)
 
-  if [[ "$installed_version" =~ $latest_version ]] && [[ "$FORCE_BUILD" = "0" ]]; then
-    echo "✅ Already running the latest OpenWrt version (${latest_version}). Skipping build."
-    echo "To build an image anyway, use the --force flag (Luke), e.g: nix run . -- --force"
-    exit 0
+    echo "🆕 Latest version:    ${latest_version}"
+    echo "📦 Installed version: ${installed_version}"
+    if [[ "$installed_version" =~ $latest_version ]] && [[ "$FORCE_BUILD" = "0" ]]; then
+      echo "✅ Already running the latest OpenWrt version (${latest_version}). Skipping build."
+      echo "To build an image anyway, use the --force flag (Luke), e.g: nix run . -- --force"
+      exit 0
+    fi
   fi
+
 
   echo "🚧 Proceeding to build for ${ROUTER_HOST}..."
   download_imagebuilder "$latest_version"

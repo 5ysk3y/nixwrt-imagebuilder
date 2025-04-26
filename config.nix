@@ -5,8 +5,9 @@ let
   defaultConfigPath  =  vars.syncthingPath or "/home/${username}";
 in {
   ROUTER_HOST = "openwrt.local";
-  TARGET = "mvebu/cortexa9";
-  PROFILE = "linksys_wrt3200acm";
-  CUSTOM_PACKAGES_FILE = "${defaultConfigPath}/Private/Notes/wrt3200acm_pkgs.txt";
-  EXCLUDE_PACKAGES_FILE = "${defaultConfigPath}/Private/Notes/wrt3200acm_exclude.txt";
+  TARGET = "mediatek/filogic";
+  PROFILE = "glinet_gl-mt6000";
+  FILES = "./files/etc/uci-defaults/00-noop";
+  CUSTOM_PACKAGES_FILE = "${defaultConfigPath}/Notes/OpenWRT/flint2_pkgs.out";
+  EXCLUDE_PACKAGES_FILE = "${defaultConfigPath}/Notes/OpenWRT/flint2_exclude.out";
 }

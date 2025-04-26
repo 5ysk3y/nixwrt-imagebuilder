@@ -23,6 +23,7 @@
           export ROUTER_HOST="''${ROUTER_HOST:-${config.ROUTER_HOST}}"
           export TARGET="''${TARGET:-${config.TARGET}}"
           export PROFILE="''${PROFILE:-${config.PROFILE}}"
+          export FILES="''${FILES:-${config.FILES}}"
           export CUSTOM_PACKAGES_FILE="''${CUSTOM_PACKAGES_FILE:-${config.CUSTOM_PACKAGES_FILE}}"
           export EXCLUDE_PACKAGES_FILE="''${EXCLUDE_PACKAGES_FILE:-${config.EXCLUDE_PACKAGES_FILE}}"
         '';

@@ -25,6 +25,7 @@ EXCLUDE_PACKAGES_FILE="${EXCLUDE_PACKAGES_FILE:-$EXCLUDE_PACKAGES_FILE}"
 FORCE_BUILD="${FORCE_BUILD:-0}"
 BASE_URL="https://downloads.openwrt.org/releases"
 
+
 fetch_latest_version() {
   curl -s "$BASE_URL/" |
     grep -Eo 'href="[0-9]+\.[0-9]+\.[0-9]+/' |
@@ -95,6 +96,7 @@ build_image() {
   popd > /dev/null
   OUTFILE=$(find imagebuilder/openwrt-imagebuilder-"$version"-"$TARGET_ARCH".Linux-x86_64/bin/targets/"$TARGET" -name *sysupgrade*  2>/dev/null | head -n1 )
   cp "$OUTFILE" ~/Downloads
+  rm -rf imagebuilder
 
   echo "✅ Build complete. Check your downloads folder!"
 }

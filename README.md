@@ -79,7 +79,7 @@ This repository is not a competitor — rather, it is a personal exploration of 
    
 2. Configure your variables in `config.nix` (all of these can be overriden by passing as environment variables too):
    ```bash
-    ROUTER_HOST = "openwrt.local"; # Your existing OpenWRT host
+    ROUTER_HOST = "openwrt.home.arpa"; # Your existing OpenWRT host
     TARGET = "mvebu/cortexa9"; # The target device type
     PROFILE = "linksys_wrt3200acm"; # The default profile to use
     CUSTOM_PACKAGES_FILE = "/home/user/pkgs.txt"; # A space/line separated list of packages to include

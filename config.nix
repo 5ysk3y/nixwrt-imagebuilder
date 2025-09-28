@@ -4,7 +4,7 @@ let
   username  = if vars ? username then vars.username else builtins.getEnv "USER";
   defaultConfigPath  =  vars.syncthingPath or "/home/${username}";
 in {
-  ROUTER_HOST = "openwrt.local";
+  ROUTER_HOST = "openwrt.home.arpa";
   TARGET = "mediatek/filogic";
   PROFILE = "glinet_gl-mt6000";
   FILES = "./files/etc/uci-defaults/00-noop";
